@@ -2556,8 +2556,8 @@ window.addEventListener('load', () => {
     // ④ 当前天气：实时状况/温度 + 今日预报（温度区间）
     var wxEl = document.getElementById('progWeather');
     if(liveInfo.temp != null || liveInfo.todayLo != null){
-      var nowLine = (liveInfo.temp != null) ? ('实时 ' + weatherIcon(liveInfo.weather) + ' ' + liveInfo.temp + '° ' + (liveInfo.weather || '')) : '';
-      var dayLine = (liveInfo.todayLo != null && liveInfo.todayHi != null) ? ('今日 ' + weatherIcon(liveInfo.todayCode) + ' ' + liveInfo.todayLo + '~' + liveInfo.todayHi + '° ' + (liveInfo.todayCode || '')) : '';
+      var nowLine = (liveInfo.temp != null) ? ('实时 ' + weatherIcon(liveInfo.weather) + ' ' + (liveInfo.weather || '') + ' ' + liveInfo.temp + '°') : '';
+      var dayLine = (liveInfo.todayLo != null && liveInfo.todayHi != null) ? ('今日 ' + weatherIcon(liveInfo.todayCode) + ' ' + (liveInfo.todayCode || '') + ' ' + liveInfo.todayLo + '~' + liveInfo.todayHi + '°') : '';
       wxEl.innerHTML = '';
       if(nowLine){
         var s1 = document.createElement('div');
