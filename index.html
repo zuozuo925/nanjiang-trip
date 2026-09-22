@@ -991,8 +991,10 @@ function switchPage(p, anchorId) {
       document.getElementById('progDate').textContent = `第 ${days} 天 / 共 12 天`;
     } else if(days < 1) {
       dayEl.textContent = '';
-      const sd = new Date('2026-09-25');
-      const left = Math.ceil((sd - new Date()) / 86400000);
+      const sd = new Date(2026, 8, 25); // 本地时间9月25日0点
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // 今天0点
+      const left = Math.round((sd - today) / 86400000); // 按天计算
       document.getElementById('progDate').textContent = left > 0 ? ('9月25日出发，距出发还有 ' + left + ' 天') : '今日出发';
     } else {
       dayEl.textContent = '行程已结束';
@@ -2555,8 +2557,10 @@ window.addEventListener('load', () => {
     if(dp.day >= 1 && dp.day <= 12){
       dateEl.textContent = '第 ' + dp.day + ' 天 / 12天 · ' + dp.label + ' · ' + hh;
     } else if(dp.day === 0){
-      const sd = dayDate(0, dayWindow(0)[0]);
-      const left = sd ? Math.ceil((sd - new Date()) / 86400000) : 0;
+      const sd2 = new Date(2026, 8, 25); // 本地时间9月25日0点
+      const now2 = new Date();
+      const today2 = new Date(now2.getFullYear(), now2.getMonth(), now2.getDate()); // 今天0点
+      const left = Math.round((sd2 - today2) / 86400000); // 按天计算
       dateEl.textContent = left > 0 ? ('9月25日出发，距出发还有 ' + left + ' 天') : '今日出发';
     } else {
       dateEl.textContent = '行程已结束';
