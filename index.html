@@ -343,6 +343,30 @@ button:active, .btn:active, .dp-btn:active, .copy-btn:active, .spot-chip:active,
 }</style>
 
 <script>
+// 页面加载完成后隐藏启动界面
+window.addEventListener('load', function() {
+  var isFirstVisit = !localStorage.getItem('hasVisited');
+  if (isFirstVisit) {
+    localStorage.setItem('hasVisited', 'true');
+    // 第一次进入，显示启动画面1.5秒
+    setTimeout(function() {
+      var splash = document.getElementById('splashScreen');
+      if (splash) {
+        splash.style.opacity = '0';
+        setTimeout(function() {
+          splash.style.display = 'none';
+        }, 500);
+      }
+    }, 1500);
+  } else {
+    // 不是第一次进入，直接隐藏启动画面
+    var splash = document.getElementById('splashScreen');
+    if (splash) {
+      splash.style.display = 'none';
+    }
+  }
+});</script>
+<script>
 // 离线缓存检测
 (function() {
   // 页面加载完成后缓存当前页面内容
@@ -439,6 +463,30 @@ if ('serviceWorker' in navigator) {
 
 </head>
 <body>
+<!-- 启动界面 -->
+<div id="splashScreen" style="position:fixed;inset:0;background:#fff;z-index:99999;display:flex;align-items:center;justify-content:center;transition:opacity 0.5s ease;">
+  <div style="width:200px;height:200px;background:#F2F2F7;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+    <svg width="140" height="140" viewBox="0 0 160 160" fill="none">
+      <!-- 路线 -->
+      <path d="M50 100 Q70 80 90 85 Q110 90 115 70" 
+            stroke="#007AFF" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="10,8">
+        <animate attributeName="stroke-dashoffset" from="36" to="0" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <!-- 起点 -->
+      <circle cx="50" cy="100" r="10" fill="#34C759"/>
+      <circle cx="50" cy="100" r="16" fill="#34C759" opacity="0.3">
+        <animate attributeName="r" values="10;18;10" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <!-- 终点图钉 -->
+      <g transform="translate(115,70)">
+        <path d="M0 0 C-12 -12 -12 -32 0 -40 C12 -32 12 -12 0 0 Z" fill="#FF3B30"/>
+        <circle cx="0" cy="-26" r="8" fill="white"/>
+        <animateTransform attributeName="transform" type="translate" values="115,70; 115,65; 115,70" dur="1.2s" repeatCount="indefinite"/>
+      </g>
+    </svg>
+  </div>
+</div>
 
 <div class="nav-bar">
   <button class="theme-btn search-btn" id="searchBtn" aria-label="搜索">
