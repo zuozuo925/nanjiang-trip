@@ -100,7 +100,7 @@ body {
 .nav-bar {
   position: fixed; top: 0; left: 0; right: 0;
   padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
-  padding-bottom: 14px;
+  padding-bottom: 19px;
   background: linear-gradient(180deg, var(--nav1) 0%, var(--nav2) 100%);
   z-index: 100;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -254,7 +254,7 @@ button:active, .btn:active, .dp-btn:active, .copy-btn:active, .spot-chip:active,
 
 /* ===== 主题切换 ===== */
 .theme-btn {
-  position: absolute; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px);
+  position: absolute; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 15px);
   width: 38px; height: 38px; border: none; border-radius: 50%;
   background: rgba(255,255,255,0.22); color: #fff;
   display: flex; align-items: center; justify-content: center;
@@ -349,11 +349,8 @@ button:active, .btn:active, .dp-btn:active, .copy-btn:active, .spot-chip:active,
 (function() {
   // 页面加载完成后缓存当前页面内容
   window.addEventListener('load', function() {
-    // 缓存当前HTML到localStorage（简化版，只缓存关键内容）
     try {
-      // 检测网络状态
       if (navigator.onLine) {
-        // 在线时标记缓存时间
         localStorage.setItem('offline_cache_time', new Date().toISOString());
         localStorage.setItem('offline_cache_url', window.location.href);
       }
@@ -371,23 +368,51 @@ button:active, .btn:active, .dp-btn:active, .copy-btn:active, .spot-chip:active,
     showOfflineBanner(false);
   });
   
+  function formatTime(isoString) {
+    if (!isoString) return '未知';
+    var date = new Date(isoString);
+    var month = (date.getMonth() + 1).toString().padStart(2, '0');
+    var day = date.getDate().toString().padStart(2, '0');
+    var hours = date.getHours().toString().padStart(2, '0');
+    var minutes = date.getMinutes().toString().padStart(2, '0');
+    return month + '月' + day + '日 ' + hours + ':' + minutes;
+  }
+  
   function showOfflineBanner(offline) {
     let banner = document.getElementById('offline-banner');
     if (!banner) {
       banner = document.createElement('div');
       banner.id = 'offline-banner';
-      banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#FF9500;color:white;text-align:center;padding:8px;font-size:13px;z-index:9999;transition:transform 0.3s;';
+      banner.style.cssText = 'position:fixed;top:calc(env(safe-area-inset-top, 0px) + 42px);left:44px;right:44px;z-index:101;transition:opacity 0.3s ease;opacity:0;border-radius:10px;overflow:hidden;pointer-events:none;';
       document.body.appendChild(banner);
     }
     
     if (offline) {
-      banner.textContent = '当前离线模式，显示的是缓存内容';
-      banner.style.transform = 'translateY(0)';
+      var cacheTime = localStorage.getItem('offline_cache_time');
+      var formattedTime = formatTime(cacheTime);
+      
+      banner.innerHTML = '<div style="background:rgba(255,149,0,0.9);color:white;padding:0px 12px;">' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+        '<div style="font-size:16px;">📱</div>' +
+        '<div style="flex:1;">' +
+        '<div style="font-size:12px;font-weight:600;line-height:1.2;">离线模式 · 缓存更新：' + formattedTime + '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+      banner.style.opacity = '1';
     } else {
-      banner.textContent = '网络已连接';
+      banner.innerHTML = '<div style="background:rgba(52,199,89,0.9);color:white;padding:0px 12px;">' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+        '<div style="font-size:16px;">✅</div>' +
+        '<div style="flex:1;">' +
+        '<div style="font-size:12px;font-weight:600;line-height:1.2;">网络已连接 · 同步中...</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+      banner.style.opacity = '1';
       setTimeout(function() {
-        banner.style.transform = 'translateY(-100%)';
-      }, 2000);
+        banner.style.opacity = '0';
+      }, 2500);
     }
   }
   
@@ -1451,8 +1476,8 @@ function renderWeather(list){
         <div style="font-size:15px;font-weight:600;"><span style="color:white;">${w.weather}</span> <span style="color:#FFD700;">${(w.lo!=null?w.lo+'°C':(w.dayLow||'--'))} ~ ${(w.hi!=null?w.hi+'°C':(w.dayHigh||'--'))}</span></div>
       </div>
     </div>
-    ${w.far?'<div style="background:rgba(255,180,0,0.14);color:var(--orange);font-size:13px;font-weight:600;padding:5px 16px;">⚠️ 远期预报（16天预报边缘），数值波动大，临近自动更新，仅供参考</div>':''}
-    <div style="padding:10px 16px 2px;font-size:13px;font-weight:600;color:var(--text2);">各停留点天气（按行程时刻 · 到哪看哪）</div>
+    ${w.far?'<div style="background:rgba(255,180,0,0.14);color:var(--orange);font-size:12px;font-weight:600;line-height:1.2;padding:5px 16px;">⚠️ 远期预报（16天预报边缘），数值波动大，临近自动更新，仅供参考</div>':''}
+    <div style="padding:10px 16px 2px;font-size:12px;font-weight:600;line-height:1.2;color:var(--text2);">各停留点天气（按行程时刻 · 到哪看哪）</div>
     <div style="padding:4px 16px 10px;display:flex;flex-direction:column;gap:7px;border-bottom:0.5px solid var(--sep);">
       ${(w.pts||[]).map(p=>`
         <div style="display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.5;">
