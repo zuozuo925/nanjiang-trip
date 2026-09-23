@@ -97,7 +97,8 @@
 :root[data-mode="dark"] .hotel-btn,
 :root[data-mode="dark"] .food-btn,
 :root[data-mode="dark"] .section-tag,
-:root[data-mode="dark"] .dp-btn {
+:root[data-mode="dark"] .dp-btn,
+:root[data-mode="dark"] .food-nav-btn {
   background: var(--bg2);
   color: var(--text2);
   border: none;
@@ -1984,7 +1985,7 @@ document.getElementById('foodList').innerHTML = `
             <div style="font-size:15px;font-weight:600;-webkit-user-select:text;user-select:text;">${i.name}<button class="copy-btn" onclick="event.stopPropagation();copyText('${i.name}')">复制</button></div>
             <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
               <a class="dp-btn" href="https://m.dianping.com/search/keyword/0/${encodeURIComponent((f.city==='塔县'?'塔什库尔干塔吉克自治县':f.city)+' '+i.name)}" target="_blank" style="margin-left:0;color:#FF6633;font-weight:600;white-space:nowrap;">大众点评</a>
-              <a onclick="openMap('${i.name} ${i.addr}')" style="display:inline-flex;align-items:center;justify-content:center;min-height:36px;font-size:13px;padding:8px 12px;border-radius:14px;margin-left:0;background:var(--btn-bg);color:var(--blue);text-decoration:none;font-weight:500;">导航</a>
+              <a class="food-nav-btn" onclick="openMap('${i.name} ${i.addr}')" style="display:inline-flex;align-items:center;justify-content:center;min-height:36px;font-size:13px;padding:8px 12px;border-radius:14px;margin-left:0;background:var(--btn-bg);color:var(--blue);text-decoration:none;font-weight:500;">导航</a>
             </div>
           </div>
           <div style="font-size:14px;color:var(--text2);margin-top:4px;line-height:1.5;">${i.desc}</div>
