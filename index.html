@@ -275,7 +275,7 @@ button:active, .btn:active, .dp-btn:active, .copy-btn:active, .spot-chip:active,
 .theme-panel {
   position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 999;
   background: var(--card);
-  padding: calc(env(safe-area-inset-top, 0px) + 16px) 16px calc(20px + env(safe-area-inset-bottom, 0px));
+  padding: calc(env(safe-area-inset-top, 0px) + 8px) 16px calc(20px + env(safe-area-inset-bottom, 0px));
   transform: translateY(100%); transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
   overflow-y: auto;
 }
@@ -303,14 +303,14 @@ button:active, .btn:active, .dp-btn:active, .copy-btn:active, .spot-chip:active,
 .search-panel {
   position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 1001;
   background: var(--card);
-  padding-top: calc(env(safe-area-inset-top, 0px) + 8px); display: flex; flex-direction: column;
+  padding: calc(env(safe-area-inset-top, 0px) + 8px) 16px 20px 16px; display: flex; flex-direction: column;
   transform: translateY(100%); transition: transform 0.28s cubic-bezier(0.32,0.72,0,1);
   overflow: hidden;
 }
 .search-panel.show { transform: translateY(0); }
-.sp-topbar { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px 2px; }
+.sp-topbar { display: flex; align-items: center; justify-content: center; padding: 6px 12px 2px; position: relative; }
 .sp-title { font-size: 17px; font-weight: 700; color: var(--text); }
-.sp-close { width: 40px; height: 40px; margin: -4px -8px -4px 0; border: none; background: none; color: var(--text2); font-size: 26px; line-height: 1; cursor: pointer; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.sp-close { width: 40px; height: 40px; margin: 0; border: none; background: none; color: var(--text2); font-size: 26px; line-height: 1; cursor: pointer; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.15s; position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
 .sp-close:active { background: var(--bg); }
 .sp-head { display: flex; align-items: center; gap: 8px; padding: 8px 16px 10px; background: var(--card); border-bottom: 0.5px solid var(--sep); }
 .sp-head input { flex: 1; height: 42px; border: none; border-radius: 14px; background: var(--bg); padding: 0 12px; font-size: 15px; color: var(--text); font-family: inherit; outline: none; }
