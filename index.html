@@ -140,7 +140,7 @@ body {
 .nav-bar h1 { font-size: 18px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
 .nav-bar .sub { font-size: 12px; color: #fff; font-weight: 400; opacity: 0.9; margin-top: 4px; text-align: center; padding: 0 20px; }
 .date-bar {
-  position: fixed; top: var(--nav-h); left: 0; right: 0;
+  position: fixed; top: calc(var(--nav-h) - 2px); left: 0; right: 0;
   background: var(--bar-bg); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
   border-bottom: 0.5px solid var(--sep); z-index: 99; padding: 4px 8px;
   display: none;
@@ -954,19 +954,15 @@ const scrollPositions = {};
 
 function adjustLayout() {
   const navBarH = document.querySelector('.nav-bar').offsetHeight;
-  // 顶栏实际高度写入 CSS 变量，供 .date-bar / .page 使用，避免硬编码错位
   document.documentElement.style.setProperty('--nav-h', navBarH + 'px');
   const dateBarH = document.getElementById('dateBar').offsetHeight;
   const foodCityBarH = document.getElementById('foodCityBar').offsetHeight;
-  // 所有页面基础padding-top = nav-bar高度 + 14px（保证首块距顶部/选择栏统一为 14px）
   document.querySelectorAll('.page').forEach(p => {
     p.style.paddingTop = navBarH + 14 + 'px';
   });
-  // 行程页额外加上date-bar高度
   document.getElementById('page-itinerary').style.paddingTop = (navBarH + dateBarH + 14) + 'px';
   const hotelCityBarH = document.getElementById('hotelCityBar').offsetHeight || 60;
   const notesBarH = document.getElementById('notesBar').offsetHeight || 60;
-  // 先显示天气选择栏获取真实高度
   const weatherBarEl = document.getElementById('weatherDateBar');
   const oldDisplay = weatherBarEl.style.display;
   weatherBarEl.style.display = 'block';
@@ -976,29 +972,23 @@ function adjustLayout() {
   document.getElementById('page-hotel').style.paddingTop = (navBarH + hotelCityBarH + 14) + 'px';
   document.getElementById('page-weather').style.paddingTop = (navBarH + weatherDateBarH + 14) + 'px';
   document.getElementById('page-notes').style.paddingTop = (navBarH + notesBarH + 14) + 'px';
-  // date-bar位置
   document.getElementById('dateBar').style.top = navBarH + 'px';
   document.getElementById('foodCityBar').style.top = navBarH + 'px';
   document.getElementById('hotelCityBar').style.top = navBarH + 'px';
   document.getElementById('weatherDateBar').style.top = navBarH + 'px';
   document.getElementById('notesBar').style.top = navBarH + 'px';
-  // day-card滚动偏移
   document.querySelectorAll('.day-card').forEach(c => {
     c.style.scrollMarginTop = (navBarH + dateBarH + 10) + 'px';
   });
-  // 美食城市滚动偏移
   document.querySelectorAll('.food-city').forEach(c => {
     c.style.scrollMarginTop = (navBarH + foodCityBarH + 10) + 'px';
   });
-  // 住宿卡片滚动偏移
   document.querySelectorAll('.hotel-card').forEach(c => {
     c.style.scrollMarginTop = (navBarH + hotelCityBarH + 10) + 'px';
   });
-  // 天气卡片滚动偏移（选择栏两行，多加30px）
   document.querySelectorAll('.weather-day').forEach(c => {
-    c.style.scrollMarginTop = (navBarH + weatherDateBarH + 40) + 'px';
+    c.style.scrollMarginTop = (navBarH + weatherDateBarH + 10) + 'px';
   });
-  // 注意事项页各板块滚动偏移
   document.querySelectorAll('#page-notes [id^="nx"]').forEach(c => {
     c.style.scrollMarginTop = (navBarH + notesBarH + 10) + 'px';
   });
@@ -2008,10 +1998,10 @@ document.getElementById('foodList').innerHTML = `
 document.getElementById('budgetTable').innerHTML = `
 <table class="tbl">
 <tr><th style="width:30%;">项目</th><th style="width:28%;white-space:nowrap;">费用</th><th style="width:42%;">说明</th></tr>
-<tr><td>往返机票</td><td style="white-space:nowrap;"><span class="tag tag-green">已订</span><span class="price">¥7582</span></td><td class="note">去程UQ3503+返程SC2278</td></tr>
-<tr><td>租车（11天）</td><td style="white-space:nowrap;"><span class="tag tag-green">已订</span><span class="price">¥2589</span></td><td class="note">途观L1.5T，2年内新车，异地还车费0元</td></tr>
+<tr><td>往返机票</td><td style="white-space:nowrap;"><span class="price">¥7582</span> <span class="tag tag-green">已订</span></td><td class="note">去程UQ3503+返程SC2278</td></tr>
+<tr><td>租车（11天）</td><td style="white-space:nowrap;"><span class="price">¥2589</span> <span class="tag tag-green">已订</span></td><td class="note">途观L1.5T，2年内新车，异地还车费0元</td></tr>
 <tr><td>油费+过路费</td><td class="price">¥3150-3850</td><td class="note">全程约4000km；国庆10.1-10.7高速免费</td></tr>
-<tr><td>住宿（11晚）</td><td style="white-space:nowrap;"><span class="tag tag-green">已订</span><span class="price">¥3526</span></td><td class="note">全部订完</td></tr>
+<tr><td>住宿（11晚）</td><td style="white-space:nowrap;"><span class="price">¥3526</span> <span class="tag tag-green">已订</span></td><td class="note">全部订完</td></tr>
 <tr><td>餐饮</td><td class="price">¥2900-3600</td><td class="note">人均80-100元/天</td></tr>
 <tr><td>门票</td><td class="price">¥1750-1950</td><td class="note">一家三口</td></tr>
 <tr><td>氧气+药品</td><td class="price">¥300</td><td class="note">—</td></tr>
