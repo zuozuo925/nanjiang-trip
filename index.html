@@ -372,7 +372,18 @@ window.addEventListener('load', function() {
       splash.style.display = 'none';
     }
   }
-});</script>
+});
+// 竖屏锁定 - 强制横屏时旋转
+function lockPortrait() {
+  if (window.orientation === 90 || window.orientation === -90) {
+    document.body.style.transform = 'rotate(90deg)';
+  } else {
+    document.body.style.transform = '';
+  }
+}
+window.addEventListener('orientationchange', lockPortrait);
+lockPortrait();
+</script>
 <script>
 // 离线缓存检测
 (function() {
