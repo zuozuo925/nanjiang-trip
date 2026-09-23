@@ -349,7 +349,7 @@ button:active, .btn:active, .dp-btn:active, .copy-btn:active, .spot-chip:active,
 
 <script>
 // 页面加载完成后隐藏启动界面
-window.addEventListener('load', function() {
+window.addEventListener('load', function() { window.scrollTo(0, 0);
   var isFirstVisit = !localStorage.getItem('hasVisited');
   if (isFirstVisit) {
     localStorage.setItem('hasVisited', 'true');
@@ -375,7 +375,7 @@ window.addEventListener('load', function() {
 // 离线缓存检测
 (function() {
   // 页面加载完成后缓存当前页面内容
-  window.addEventListener('load', function() {
+  window.addEventListener('load', function() { window.scrollTo(0, 0);
     try {
       if (navigator.onLine) {
         localStorage.setItem('offline_cache_time', new Date().toISOString());
@@ -445,7 +445,7 @@ window.addEventListener('load', function() {
   
   // 页面加载时检测是否离线
   if (!navigator.onLine) {
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function() { window.scrollTo(0, 0);
       showOfflineBanner(true);
     });
   }
@@ -456,7 +456,7 @@ window.addEventListener('load', function() {
 <script>
 // 注册Service Worker（如果支持）
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
+  window.addEventListener('load', function() { window.scrollTo(0, 0);
     navigator.serviceWorker.register('/sw.js').then(function(registration) {
       console.log('Service Worker注册成功');
     }).catch(function(err) {
@@ -511,7 +511,7 @@ if ('serviceWorker' in navigator) {
 <div class="date-bar" id="weatherDateBar"><div id="weatherDateScroll" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:8px 12px;"></div></div>
 <div class="date-bar" id="notesBar"><div id="notesScroll" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:8px 12px;"></div></div>
 
-<div class="page active" id="page-overview">
+<div class="page active" id="page-overview" style="padding-top: calc(var(--nav-h) + 14px);">
   <!-- 南疆环线路线图 -->
   <div style="margin:0 0 14px;">
     <div style="background:linear-gradient(135deg,var(--nav2),var(--nav3));color:white;padding:14px 16px;border-radius:14px 14px 0 0;font-size:17px;font-weight:700;">南疆环线路线<div style="font-size:12px;font-weight:400;opacity:0.9;margin-top:4px;">9.25阿克苏进 → 10.6库尔勒出 · 12天11晚 · 约4000km · 二大一小</div></div>
