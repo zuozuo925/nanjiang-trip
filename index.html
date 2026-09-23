@@ -1532,7 +1532,7 @@ function renderWeather(list){
       </div>
     </div>
     ${w.far?'<div style="background:rgba(255,180,0,0.14);color:var(--orange);font-size:12px;font-weight:600;line-height:1.2;padding:5px 16px;">⚠️ 远期预报（16天预报边缘），数值波动大，临近自动更新，仅供参考</div>':''}
-    <div style="padding:10px 16px 2px;font-size:12px;font-weight:600;line-height:1.2;color:var(--text2);">各停留点天气（按行程时刻 · 到哪看哪）</div>
+    <div style="padding:10px 16px 2px;font-size:12px;font-weight:600;line-height:1.2;color:var(--text2);">各停留点实时天气</div>
     <div style="padding:4px 16px 10px;display:flex;flex-direction:column;gap:7px;border-bottom:0.5px solid var(--sep);">
       ${(w.pts||[]).map(p=>`
         <div style="display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.5;">
