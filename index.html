@@ -310,7 +310,7 @@ button:active, .btn:active, .dp-btn:active, .copy-btn:active, .spot-chip:active,
 .search-panel.show { transform: translateY(0); }
 .sp-topbar { display: flex; align-items: center; justify-content: center; padding: 6px 12px 2px; position: relative; }
 .sp-title { font-size: 17px; font-weight: 700; color: var(--text); }
-.sp-close { width: 40px; height: 40px; margin: 0; border: none; background: none; color: var(--text2); font-size: 26px; line-height: 1; cursor: pointer; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.15s; position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
+.sp-close { width: 40px; height: 40px; margin: 0; border: none; background: none; color: var(--text2); font-size: 26px; line-height: 1; cursor: pointer; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.15s; position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 10; }
 .sp-close:active { background: var(--bg); }
 .sp-head { display: flex; align-items: center; gap: 8px; padding: 8px 16px 10px; background: var(--card); border-bottom: 0.5px solid var(--sep); }
 .sp-head input { flex: 1; height: 42px; border: none; border-radius: 14px; background: var(--bg); padding: 0 12px; font-size: 15px; color: var(--text); font-family: inherit; outline: none; }
@@ -2226,11 +2226,11 @@ function onSpyScroll(){
   }
 
   function openPanel(){ document.getElementById('themeMask').classList.add('show'); document.getElementById('themePanel').classList.add('show'); document.body.style.overflow='hidden'; document.documentElement.style.overflow='hidden'; }
-  function closePanel(){ document.getElementById('themeMask').classList.remove('show'); document.getElementById('themePanel').classList.remove('show'); document.body.style.overflow=''; document.documentElement.style.overflow=''; }
+  function closePanel(e){ if(e) e.stopPropagation(); document.getElementById('themeMask').classList.remove('show'); document.getElementById('themePanel').classList.remove('show'); document.body.style.overflow=''; document.documentElement.style.overflow=''; }
 
   document.getElementById('themeBtn').addEventListener('click', function(e){ e.stopPropagation(); openPanel(); });
   document.getElementById('themeMask').addEventListener('click', closePanel);
-  document.getElementById('themeClose').addEventListener('click', closePanel);
+  document.getElementById('themeClose').addEventListener('click', function(e){ closePanel(e); });
   // 字体大小调节
   document.querySelectorAll('#fontSeg .tp-seg-item').forEach(item => {
     item.addEventListener('click', function() {
@@ -2454,7 +2454,7 @@ function onSpyScroll(){
   window.closeSearch = closeSearch;
   document.getElementById('searchBtn').addEventListener('click', openSearch);
   document.getElementById('searchMask').addEventListener('click', closeSearch);
-  document.getElementById('searchClose').addEventListener('click', closeSearch);
+  document.getElementById('searchClose').addEventListener('click', function(e){ closeSearch(e); });
   var timer = null;
   document.getElementById('searchInput').addEventListener('input', function(e){
     var v = e.target.value;
