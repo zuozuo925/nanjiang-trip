@@ -32,5 +32,6 @@
       "description": "查看已订住宿",
       "url": "/nanjiang-trip/#hotel"
     }
-  ]
+  ],
+  "orientation": "portrait"
 }
