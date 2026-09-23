@@ -92,13 +92,22 @@
   --nav2: #0A2A4A;
   --nav3: #1E3A5F;
 }
-/* 深色模式下胶囊按钮用白色文字，保证所有主题色下可读 */
+/* 深色模式下胶囊按钮统一灰色样式，与复制按钮一致 */
 :root[data-mode="dark"] .spot-chip,
 :root[data-mode="dark"] .hotel-btn,
 :root[data-mode="dark"] .food-btn,
-:root[data-mode="dark"] .section-tag {
-  color: #fff;
-  border-color: rgba(255,255,255,0.2);
+:root[data-mode="dark"] .section-tag,
+:root[data-mode="dark"] .dp-btn {
+  background: var(--bg2);
+  color: var(--text2);
+  border: none;
+}
+/* 设置页三个胶囊（刷新/下载/分享） */
+:root[data-mode="dark"] .theme-panel button,
+:root[data-mode="dark"] .theme-panel a {
+  background: var(--bg2) !important;
+  color: var(--text2) !important;
+  border: none !important;
 }
 :root:not([data-mode="dark"]) {
   --module-bg:#F2F2F7;
