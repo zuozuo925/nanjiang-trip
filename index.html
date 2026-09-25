@@ -1087,7 +1087,41 @@ function switchPage(p, anchorId) {
       window.scrollTo(0, 0);
     }
   } else {
-    window.scrollTo(0, scrollPositions['page-'+p] || 0);
+    // 无锚点：自动定位到当天
+    var today = new Date();
+    var sd = new Date(2026, 8, 25);
+    var dayNum = Math.floor((today - sd) / 86400000) + 1;
+    var autoJumped = false;
+    if ((p === 'itinerary' || p === 'hotel' || p === 'weather') && dayNum >= 1 && dayNum <= 12) {
+      var did = 'd' + dayNum;
+      var el2 = document.getElementById(did);
+      if (el2) {
+        setTimeout(function(){
+          var navH2 = document.querySelector('.nav-bar').offsetHeight;
+          var barH2 = document.getElementById('dateBar').offsetHeight || 60;
+          window.scrollTo(0, Math.max(0, el2.offsetTop - navH2 - barH2 - 14));
+          if (p === 'itinerary') {
+            document.querySelectorAll('#dateScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i < days.length && days[i].id === did));
+          }
+        }, 100);
+        autoJumped = true;
+      }
+    }
+    if (p === 'food' && dayNum >= 1 && dayNum <= 12) {
+      var cityNames = ['阿克苏','喀什','塔县','塔县','塔县','莎车','和田','沙雅','库车','库尔勒','库尔勒','库尔勒'];
+      var city = cityNames[dayNum-1];
+      var el3 = document.getElementById('food-' + city);
+      if (el3) {
+        setTimeout(function(){
+          var navH3 = document.querySelector('.nav-bar').offsetHeight;
+          var barH3 = document.getElementById('foodCityBar').offsetHeight || 60;
+          window.scrollTo(0, Math.max(0, el3.offsetTop - navH3 - barH3 - 14));
+          document.querySelectorAll('#foodCityScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i === dayNum-1));
+        }, 100);
+        autoJumped = true;
+      }
+    }
+    if (!autoJumped) window.scrollTo(0, scrollPositions['page-'+p] || 0);
   }
   setTimeout(setupScrollSpy, 80);
   /* 记住当前页 + 同步深链（#页/锚点），刷新或把链接发给别人都能回到原位 */
