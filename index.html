@@ -484,11 +484,13 @@ window.addEventListener('load', function() { window.scrollTo(0, 0);
 // 注册Service Worker（如果支持）
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() { window.scrollTo(0, 0);
-    navigator.serviceWorker.register('/sw.js').then(function(registration) {
-      console.log('Service Worker注册成功');
-    }).catch(function(err) {
-      console.log('Service Worker注册失败');
-    });
+    if(location.search.indexOf('fresh=1') === -1){
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        console.log('Service Worker注册成功');
+      }).catch(function(err) {
+        console.log('Service Worker注册失败');
+      });
+    }
   });
 }
 </script>
@@ -819,7 +821,7 @@ if ('serviceWorker' in navigator) {
 
   </div>
   <div style="background:var(--card);border-radius:14px;overflow:hidden;margin-top:8px;padding:14px 16px;display:flex;gap:12px;">
-    <button onclick="(async()=>{if('serviceWorker'in navigator){const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.unregister();}if('caches'in window){const ks=await caches.keys();for(const k of ks)await caches.delete(k);}location.replace(location.pathname+'?t='+Date.now());})()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:8px 12px;background:var(--btn-bg);border:1px solid var(--line, rgba(0,0,0,.08));border-radius:14px;font-size:14px;color:var(--blue);cursor:pointer;text-decoration:none;">
+    <button onclick="(async()=>{if('serviceWorker'in navigator){const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs)await r.unregister();}if('caches'in window){const ks=await caches.keys();for(const k of ks)await caches.delete(k);}location.href=location.pathname+'?fresh=1&t='+Date.now();})()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:8px 12px;background:var(--btn-bg);border:1px solid var(--line, rgba(0,0,0,.08));border-radius:14px;font-size:14px;color:var(--blue);cursor:pointer;text-decoration:none;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
       刷新网页
     </button>
@@ -2856,9 +2858,11 @@ window.addEventListener('load', () => {
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js', { scope: './' })
-      .then(reg => console.log('SW ok', reg.scope))
-      .catch(err => console.log('SW fail', err));
+    if(location.search.indexOf('fresh=1') === -1){
+      navigator.serviceWorker.register('sw.js', { scope: './' })
+        .then(reg => console.log('SW ok', reg.scope))
+        .catch(err => console.log('SW fail', err));
+    }
   });
 }
 
