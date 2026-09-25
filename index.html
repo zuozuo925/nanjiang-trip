@@ -2552,9 +2552,9 @@ window.addEventListener('load', () => {
     const end = new Date(2026, 9, 6, 23, 59, 0); // 10月6日23:59
     if(now < start) return {pct:0, day:0, done:0, city:dayInfo[0].city, alt:dayInfo[0].alt, label:'准备中'};
     if(now > end)   return {pct:100, day:12, done:TOTAL_KM, city:dayInfo[11].city, alt:dayInfo[11].alt, label:'行程已结束'};
-    // 当前是第几天
+    // 当前是第几天（按自然日0点分界）
     let day = 1;
-    for(let i=0;i<12;i++){ const d0 = dayDate(i, dayWindow(i)[0]); if(d0 && now >= d0) day = i + 1; }
+    for(let i=0;i<12;i++){ const m = String(days[i].date).match(/(\d{1,2})\.(\d{1,2})/); if(!m) continue; const d0 = new Date(2026, parseInt(m[1],10)-1, parseInt(m[2],10), 0,0,0,0); if(now >= d0) day = i + 1; }
     const i0 = day - 1;
     const w = dayWindow(i0);
     const ds = dayDate(i0, w[0]), de = dayDate(i0, w[1]);
