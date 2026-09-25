@@ -2857,7 +2857,18 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     if(location.search.indexOf('fresh=1') === -1){
       navigator.serviceWorker.register('sw.js', { scope: './' })
-        .then(reg => console.log('SW ok', reg.scope))
+        .then(reg => {
+          console.log('SW ok', reg.scope);
+          reg.onupdatefound = () => {
+            const nw = reg.installing;
+            if(!nw) return;
+            nw.onstatechange = () => {
+              if(nw.state === 'activated' && navigator.serviceWorker.controller) {
+                location.reload();
+              }
+            };
+          };
+        })
         .catch(err => console.log('SW fail', err));
     }
   });
