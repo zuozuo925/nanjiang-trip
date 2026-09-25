@@ -879,6 +879,7 @@ function locateNow(){
     liveInfo.lon = lon;
     liveInfo.coords = lat.toFixed(2) + ',' + lon.toFixed(2);
     if(pos.coords.altitude) liveInfo.gpsAlt = Math.round(pos.coords.altitude) + 'm';
+    if(typeof updateDisplay === 'function') updateDisplay();
     // 定位那行只显示经纬度
     setGpsText('📍 ' + liveInfo.coords, 'var(--green)');
     paintLive();
