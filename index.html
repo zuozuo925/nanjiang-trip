@@ -1010,13 +1010,16 @@ function switchPage(p, anchorId) {
     const end = new Date('2026-10-06');
     const diff = today - start;
     const total = end - start;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24)) + 1;
+    const dayNum = Math.floor(diff / (1000 * 60 * 60 * 24)) + 1;
     const pct = Math.min(100, Math.max(0, Math.round(diff / total * 100)));
     const dayEl = document.getElementById('dayProgress');
-    if(days >= 1 && days <= 12) {
-      dayEl.textContent = `已完成 ${pct}%`;
-      document.getElementById('progDate').textContent = `第 ${days} 天 / 共 12 天`;
-    } else if(days < 1) {
+    if(dayNum >= 1 && dayNum <= 12) {
+      dayEl.textContent = '';
+      var now3 = new Date();
+      var hh3 = now3.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false});
+      var label3 = (days[dayNum-1] || {}).date ? String(days[dayNum-1].date).split('·')[1].trim() : '';
+      document.getElementById('progDate').textContent = `第 ${dayNum} 天 / 共 12 天 · ${label3} · ${hh3}`;
+    } else if(dayNum < 1) {
       dayEl.textContent = '';
       const sd = new Date(2026, 8, 25); // 本地时间9月25日0点
       const now = new Date();
@@ -2580,7 +2583,7 @@ window.addEventListener('load', () => {
     const hh = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false});
     const dateEl = document.getElementById('progDate');
     if(dp.day >= 1 && dp.day <= 12){
-      dateEl.textContent = '第 ' + dp.day + ' 天 / 12天 · ' + dp.label + ' · ' + hh;
+      dateEl.textContent = '第 ' + dp.day + ' 天 / 共 12 天 · ' + dp.label + ' · ' + hh;
     } else if(dp.day === 0){
       const sd2 = new Date(2026, 8, 25); // 本地时间9月25日0点
       const now2 = new Date();
@@ -2595,6 +2598,11 @@ window.addEventListener('load', () => {
     document.getElementById('progRemain').textContent = '剩余约 ' + (TOTAL_KM - dp.done) + 'km';
     document.getElementById('progBar').style.width = dp.pct + '%';
     document.getElementById('progDot').style.left = dp.pct + '%';
+    // 同步右上角"已完成X%"
+    const dayEl = document.getElementById('dayProgress');
+    if(dayEl){
+      dayEl.textContent = '';
+    }
     // 更新路线图（内部有去重，跨天才重绘）
     updateRouteMap(dp.day, liveInfo.lat, liveInfo.lon);
     // 没有定位数据时，用"计划中当天城市/海拔"兜底，保证不留空白
