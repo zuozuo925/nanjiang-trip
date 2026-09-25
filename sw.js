@@ -1,7 +1,5 @@
-const CACHE_NAME = 'nanjiang-trip-v6';
+const CACHE_NAME = 'nanjiang-trip-v7';
 const urlsToCache = [
-  './',
-  './index.html',
   './manifest.json',
   './sw.js'
 ];
@@ -34,10 +32,10 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', function(event) {
   if (event.request.method !== 'GET') return;
 
-  // HTML导航请求：网络优先，保证用户总是看到最新版
+  // HTML导航请求：永远从网络拿最新版，绕过HTTP缓存和SW缓存
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'reload' })
         .then(function(response) {
           var copy = response.clone();
           caches.open(CACHE_NAME).then(function(cache) {
