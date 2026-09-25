@@ -26,7 +26,13 @@ self.addEventListener('activate', function(event) {
       );
     })
   );
-  self.clients.claim();
+  self.clients.claim().then(function() {
+    return self.clients.matchAll({type: 'window'});
+  }).then(function(clients) {
+    clients.forEach(function(client) {
+      client.navigate(client.url);
+    });
+  });
 });
 
 self.addEventListener('fetch', function(event) {
