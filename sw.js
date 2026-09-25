@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nanjiang-trip-v5';
+const CACHE_NAME = 'nanjiang-trip-v6';
 const urlsToCache = [
   './',
   './index.html',
@@ -11,7 +11,6 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
-        console.log('缓存核心资源');
         return cache.addAll(urlsToCache);
       })
   );
@@ -23,7 +22,6 @@ self.addEventListener('activate', function(event) {
       return Promise.all(
         cacheNames.map(function(cacheName) {
           if (cacheName !== CACHE_NAME) {
-            console.log('清理旧缓存', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -33,32 +31,40 @@ self.addEventListener('activate', function(event) {
   self.clients.claim();
 });
 
-// 缓存优先，网络兜底
 self.addEventListener('fetch', function(event) {
-  // 只处理GET请求
   if (event.request.method !== 'GET') return;
-  
+
+  // HTML导航请求：网络优先，保证用户总是看到最新版
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then(function(response) {
+          var copy = response.clone();
+          caches.open(CACHE_NAME).then(function(cache) {
+            cache.put('./index.html', copy);
+          });
+          return response;
+        })
+        .catch(function() {
+          return caches.match('./index.html');
+        })
+    );
+    return;
+  }
+
+  // 其他资源：缓存优先
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true })
       .then(function(response) {
-        // 缓存命中，直接返回
-        if (response) {
-          return response;
-        }
-        // 缓存未命中，网络请求
+        if (response) return response;
         return fetch(event.request).then(function(response) {
-          // 检查是否有效响应
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-          // 克隆响应并缓存
-          const responseToCache = response.clone();
+          if (!response || response.status !== 200 || response.type !== 'basic') return response;
+          var copy = response.clone();
           caches.open(CACHE_NAME).then(function(cache) {
-            cache.put(event.request, responseToCache);
+            cache.put(event.request, copy);
           });
           return response;
         }).catch(function() {
-          // 网络失败，尝试返回缓存的首页
           return caches.match('./index.html');
         });
       })
