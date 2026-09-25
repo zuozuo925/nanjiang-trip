@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nanjiang-trip-v4';
+const CACHE_NAME = 'nanjiang-trip-v5';
 const urlsToCache = [
   './',
   './index.html',
