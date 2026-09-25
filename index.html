@@ -2562,12 +2562,9 @@ window.addEventListener('load', () => {
     if(now <= ds) frac = 0;
     else if(now >= de) frac = 1;
     else frac = (now - ds) / (de - ds);
-    // GPS 校正：还在起点城市30km内 → 当天进度为0（还没开始开车）
-    if(liveInfo.lat != null && dayInfo[i0].lat != null){
-      var startDist = haversine(liveInfo.lat, liveInfo.lon, dayInfo[i0].lat, dayInfo[i0].lng);
-      if(startDist <= 30) { frac = 0; }
-      // 已过当天一半时间且抵达目的地30km内 → 当天按完成计
-      else if(frac > 0.3 && haversine(liveInfo.lat, liveInfo.lon, dayInfo[i0].lat, dayInfo[i0].lng) <= 30) { frac = 1; }
+    // GPS 校正：已过当天一半时间且抵达目的地30km内 → 当天按完成计
+    if(liveInfo.lat != null && dayInfo[i0].lat != null && frac > 0.3){
+      if(haversine(liveInfo.lat, liveInfo.lon, dayInfo[i0].lat, dayInfo[i0].lng) <= 30) frac = 1;
     }
     frac = Math.max(0, Math.min(1, frac));
     // 计算已行驶里程（前几天全程 + 当天按比例）
