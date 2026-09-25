@@ -1022,7 +1022,7 @@ function switchPage(p, anchorId) {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // 今天0点
       const left = Math.round((sd - today) / 86400000); // 按天计算
-      document.getElementById('progDate').textContent = left > 0 ? ('9月25日出发，距出发还有 ' + left + ' 天') : '今日出发';
+      document.getElementById('progDate').textContent = left > 0 ? ('9月25日出发，距出发还有 ' + left + ' 天') : '';
     } else {
       dayEl.textContent = '行程已结束';
       document.getElementById('progDate').textContent = '10.6 返程';
@@ -2528,6 +2528,8 @@ window.addEventListener('load', () => {
   const KM_SUM = DAY_KM.reduce(function(a,b){ return a+b; }, 0) || TOTAL_KM;
   // 每天的时间窗（取当天行程时间轴的第一条和最后一条）
   function dayWindow(i){
+    // 第1天从取车时间12:50开始算，跳过飞行时间
+    if(i === 0) return [12*60+50, 19*60+30];
     const ts = (days[i].timeline || []).map(function(x){ return parseHM(x.t); }).filter(function(v){ return v != null; });
     if(!ts.length) return [8*60, 20*60];
     return [Math.min.apply(null, ts), Math.max.apply(null, ts)];
@@ -2541,9 +2543,8 @@ window.addEventListener('load', () => {
   }
   function calcTimeProgress(){
     const now = new Date();
-    const start = dayDate(0, dayWindow(0)[0]);
-    const end = dayDate(11, dayWindow(11)[1]);
-    if(!start || !end) return {pct:0, day:0, done:0, city:dayInfo[0].city, alt:dayInfo[0].alt, label:'准备中'};
+    const start = new Date(2026, 8, 25, 0, 0, 0); // 9月25日0点
+    const end = new Date(2026, 9, 6, 23, 59, 0); // 10月6日23:59
     if(now < start) return {pct:0, day:0, done:0, city:dayInfo[0].city, alt:dayInfo[0].alt, label:'准备中'};
     if(now > end)   return {pct:100, day:12, done:TOTAL_KM, city:dayInfo[11].city, alt:dayInfo[11].alt, label:'行程已结束'};
     // 当前是第几天
@@ -2556,23 +2557,18 @@ window.addEventListener('load', () => {
     if(now <= ds) frac = 0;
     else if(now >= de) frac = 1;
     else frac = (now - ds) / (de - ds);
-    // GPS 校正：已抵达当天目的地 30km 内 → 当天按完成计
+    // GPS 校正：还在起点城市30km内 → 当天进度为0（还没开始开车）
     if(liveInfo.lat != null && dayInfo[i0].lat != null){
-      if(haversine(liveInfo.lat, liveInfo.lon, dayInfo[i0].lat, dayInfo[i0].lng) <= 30) frac = 1;
+      var startDist = haversine(liveInfo.lat, liveInfo.lon, dayInfo[i0].lat, dayInfo[i0].lng);
+      if(startDist <= 30) { frac = 0; }
+      // 已过当天一半时间且抵达目的地30km内 → 当天按完成计
+      else if(frac > 0.3 && haversine(liveInfo.lat, liveInfo.lon, dayInfo[i0].lat, dayInfo[i0].lng) <= 30) { frac = 1; }
     }
     frac = Math.max(0, Math.min(1, frac));
-    // 计算已行驶里程
+    // 计算已行驶里程（前几天全程 + 当天按比例）
     let doneKm = 0;
     for(let j=0;j<i0;j++) doneKm += DAY_KM[j];
     doneKm += DAY_KM[i0] * frac;
-    // GPS精准计算：如果有GPS定位，用GPS实际位置计算从起点到当前位置的距离
-    if(liveInfo.lat != null && liveInfo.lon != null && dayInfo[0].lat != null){
-      // 从起点（第1天）到当前GPS位置的距离
-      const gpsDist = haversine(dayInfo[0].lat, dayInfo[0].lng, liveInfo.lat, liveInfo.lon);
-      // 如果GPS距离比时间估算的距离大，就用GPS距离（说明已经开了更多路）
-      // 如果GPS距离比时间估算的距离小，就用时间估算的距离（说明GPS可能在原地没动）
-      if(gpsDist > doneKm) doneKm = gpsDist;
-    }
     const pct = Math.round(doneKm / KM_SUM * 100);
     return {pct: pct, day: day, done: Math.round(TOTAL_KM * pct / 100),
             city: dayInfo[i0].city, alt: dayInfo[i0].alt,
@@ -2590,7 +2586,7 @@ window.addEventListener('load', () => {
       const now2 = new Date();
       const today2 = new Date(now2.getFullYear(), now2.getMonth(), now2.getDate()); // 今天0点
       const left = Math.round((sd2 - today2) / 86400000); // 按天计算
-      dateEl.textContent = left > 0 ? ('9月25日出发，距出发还有 ' + left + ' 天') : '今日出发';
+      dateEl.textContent = left > 0 ? ('9月25日出发，距出发还有 ' + left + ' 天') : '';
     } else {
       dateEl.textContent = '行程已结束';
     }
