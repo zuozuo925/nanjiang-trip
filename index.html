@@ -1020,7 +1020,9 @@ function switchPage(p, anchorId) {
     if (anchorId) jumpDay(anchorId);
     return;
   }
-  if (currentPage) scrollPositions[currentPage.id] = window.scrollY;
+  if (currentPage) {
+    scrollPositions[currentPage.id] = window.scrollY;
+  }
   // 行程进度自动计算
   function calcDayProgress() {
     const today = new Date();
@@ -1107,7 +1109,16 @@ function switchPage(p, anchorId) {
       window.scrollTo(0, 0);
     }
   } else {
-    // 无锚点：自动定位到当天
+    // 检查是否有手动滚动过的记录
+    var savedY = scrollPositions['page-'+p] || 0;
+    var autoJumped = false;
+    if (savedY > 0 && (p === 'itinerary' || p === 'hotel' || p === 'weather' || p === 'food')) {
+      // 有记录：恢复之前位置，scroll-spy自动算高亮
+      window.scrollTo(0, savedY);
+      autoJumped = true;
+    }
+    if (!autoJumped) {
+    // 自动定位到当天
     var today = new Date();
     var sd = new Date(2026, 8, 25);
     var dayNum = Math.floor((today - sd) / 86400000) + 1;
@@ -1159,6 +1170,7 @@ function switchPage(p, anchorId) {
       }
     }
     if (!autoJumped) window.scrollTo(0, scrollPositions['page-'+p] || 0);
+    }
   }
   setTimeout(setupScrollSpy, 80);
   /* 记住当前页 + 同步深链（#页/锚点），刷新或把链接发给别人都能回到原位 */
