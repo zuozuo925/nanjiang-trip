@@ -1058,6 +1058,26 @@ function switchPage(p, anchorId) {
   document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
   document.querySelector(`[data-page="${p}"]`).classList.add('active');
   document.getElementById('navTitle').textContent = titles[p];
+
+  // 提前设置当天高亮，避免先显示9.25再跳到当天的闪烁
+  var today0 = new Date();
+  var sd0 = new Date(2026, 8, 25);
+  var dayNum0 = Math.floor((today0 - sd0) / 86400000) + 1;
+  if (dayNum0 >= 1 && dayNum0 <= 12) {
+    if (p === 'itinerary') {
+      var did0 = 'd' + dayNum0;
+      document.querySelectorAll('#dateScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i < days.length && days[i].id === did0));
+    }
+    if (p === 'hotel') {
+      document.querySelectorAll('#hotelCityScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i === dayNum0-1));
+    }
+    if (p === 'weather') {
+      document.querySelectorAll('#weatherDateScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i === dayNum0-1));
+    }
+    if (p === 'food') {
+      document.querySelectorAll('#foodCityScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i === dayNum0-1));
+    }
+  }
   if (p === 'weather') {
     refreshWeather(false);
   }
