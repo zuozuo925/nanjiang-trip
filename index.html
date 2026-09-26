@@ -969,6 +969,7 @@ window.addEventListener('load', () => {
 <script>
 const titles = { overview:'路线总览', itinerary:'详细行程', hotel:'酒店住宿', food:'美食推荐', weather:'天气状况', notes:'更多内容' };
 const scrollPositions = {};
+const scrollDayMap = {};
 
 function adjustLayout() {
   const navBarH = document.querySelector('.nav-bar').offsetHeight;
@@ -1022,6 +1023,9 @@ function switchPage(p, anchorId) {
   }
   if (currentPage) {
     scrollPositions[currentPage.id] = window.scrollY;
+    var _today = new Date();
+    var _sd = new Date(2026, 8, 25);
+    scrollDayMap[currentPage.id] = Math.floor((_today - _sd) / 86400000) + 1;
   }
   // 行程进度自动计算
   function calcDayProgress() {
@@ -1079,7 +1083,8 @@ function switchPage(p, anchorId) {
       document.querySelectorAll('#weatherDateScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i === dayNum0-1));
     }
     if (p === 'food') {
-      document.querySelectorAll('#foodCityScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i === dayNum0-1));
+      var foodIdx0 = [0, 1, 2, 2, 2, 3, 4, 6, 7, 8, 8, 8];
+      document.querySelectorAll('#foodCityScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i === foodIdx0[dayNum0-1]));
     }
   }
   if (p === 'weather') {
@@ -1111,9 +1116,13 @@ function switchPage(p, anchorId) {
   } else {
     // 检查是否有手动滚动过的记录
     var savedY = scrollPositions['page-'+p] || 0;
+    var _today2 = new Date();
+    var _sd2 = new Date(2026, 8, 25);
+    var _curDay = Math.floor((_today2 - _sd2) / 86400000) + 1;
+    var savedDay = scrollDayMap['page-'+p] || 0;
     var autoJumped = false;
-    if (savedY > 0 && (p === 'itinerary' || p === 'hotel' || p === 'weather' || p === 'food')) {
-      // 有记录：恢复之前位置，scroll-spy自动算高亮
+    // 只有保存时和现在是同一天，才恢复位置；跨天了重新自动定位
+    if (savedY > 0 && savedDay === _curDay && (p === 'itinerary' || p === 'hotel' || p === 'weather' || p === 'food')) {
       window.scrollTo(0, savedY);
       autoJumped = true;
     }
@@ -1153,9 +1162,9 @@ function switchPage(p, anchorId) {
       }
     }
     if (p === 'food' && dayNum >= 1 && dayNum <= 12) {
-      var cityNames = ['阿克苏','喀什','塔县','塔县','塔县','莎车','和田','沙雅','库车','库尔勒','库尔勒','库尔勒'];
-      var city = cityNames[dayNum-1];
-      var el3 = document.getElementById('food-' + city);
+      var foodIdxMap = [0, 1, 2, 2, 2, 3, 4, 6, 7, 8, 8, 8];
+      var fIdx = foodIdxMap[dayNum-1];
+      var el3 = document.getElementById('food-city-' + fIdx);
       if (el3) {
         spyLock = true;
         requestAnimationFrame(function(){
@@ -1163,7 +1172,7 @@ function switchPage(p, anchorId) {
           var navH3 = document.querySelector('.nav-bar').offsetHeight;
           var barH3 = document.getElementById('foodCityBar').offsetHeight || 60;
           window.scrollTo(0, Math.max(0, el3.offsetTop - navH3 - barH3 - 14));
-          document.querySelectorAll('#foodCityScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i === dayNum-1));
+          document.querySelectorAll('#foodCityScroll .date-chip').forEach((c,i) => c.classList.toggle('active', i === fIdx));
           setTimeout(function(){ spyLock = false; }, 500);
         });
         autoJumped = true;
