@@ -2825,9 +2825,8 @@ window.addEventListener('load', () => {
       {name:'喀什', label:'返', size:18, lat:39.47, lon:75.99},
       {name:'莎车', label:'3', size:18, lat:38.42, lon:77.27},
       {name:'和田', label:'4', size:18, lat:37.11, lon:79.92},
-      {name:'沙雅', label:'5', size:18, lat:41.23, lon:82.77},
-      {name:'库车', label:'6', size:18, lat:41.72, lon:82.93},
-      {name:'那拉提', label:'7', size:18, lat:43.25, lon:84.18},
+      {name:'库车', label:'5', size:18, lat:41.72, lon:82.93},
+      {name:'那拉提', label:'6', size:18, lat:43.25, lon:84.18},
       {name:'库尔勒', label:'终', size:22, lat:41.73, lon:86.16},
     ];
     // day到城市索引的映射：
@@ -2838,9 +2837,9 @@ window.addEventListener('load', () => {
     // 第5天(9.29)：喀什返(3)
     // 第6天(9.30)：莎车(4)
     // 第7天(10.1)：和田(5)
-    // 第8天(10.2)：沙雅139秘境(6)
-    // 第9天(10.3)：那拉提(8)
-    // 第10-12天：库尔勒(9)
+    // 第8天(10.2)：库车(6)
+    // 第9天(10.3)：那拉提(7)
+    // 第10-12天：库尔勒(8)
     let cityIdx = 0;
     if(day === 1) cityIdx = 0;
     if(day === 2) cityIdx = 1;
@@ -2849,8 +2848,8 @@ window.addEventListener('load', () => {
     if(day === 6) cityIdx = 4;
     if(day === 7) cityIdx = 5;
     if(day === 8) cityIdx = 6;
-    if(day === 9) cityIdx = 8;
-    if(day >= 10) cityIdx = 9;
+    if(day === 9) cityIdx = 7;
+    if(day >= 10) cityIdx = 8;
     // 如果有GPS定位，找到最近的城市作为当前位置
     if(gpsLat && gpsLon){
       let minDist = Infinity;
@@ -2899,7 +2898,6 @@ window.addEventListener('load', () => {
     {name:'塔县', lat:37.77, lng:75.23},
     {name:'莎车', lat:38.42, lng:77.27},
     {name:'和田', lat:37.11, lng:79.92},
-    {name:'沙雅', lat:41.23, lng:82.77},
     {name:'库车', lat:41.72, lng:82.93},
     {name:'那拉提', lat:43.25, lng:84.18},
     {name:'库尔勒', lat:41.73, lng:86.16},
