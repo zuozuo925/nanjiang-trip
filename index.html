@@ -1136,7 +1136,7 @@ function switchPage(p, anchorId) {
       var did = 'd' + dayNum;
       var targetId = did;
       var barId = 'dateBar';
-      if (p === 'hotel') { targetId = 'hotel-card-' + (dayNum - 1); barId = 'hotelCityBar'; }
+      if (p === 'hotel') { var hChip = HOTEL_CHIPS[dayNum - 1]; if (hChip) targetId = 'hotel-card-' + hChip.i; barId = 'hotelCityBar'; }
       if (p === 'weather') { targetId = 'weather-day-' + (dayNum - 1); barId = 'weatherDateBar'; }
       var el2 = document.getElementById(targetId);
       if (el2) {
